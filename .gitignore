@@ -1,0 +1,10 @@
+.DS_Store
+**/.idea/*
+.vscode/*
+*.pdf
+api*
+**/vendor/*
+**/node_modules/*
+
+
+
