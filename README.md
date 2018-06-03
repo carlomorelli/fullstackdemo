@@ -1,4 +1,4 @@
-# Empatica Web Demo
+# Fullstack Web Demo
 
 This code represents a demo environment for a web application. It consists in a backend written in Go and a frontend built on top of Angular.
 
