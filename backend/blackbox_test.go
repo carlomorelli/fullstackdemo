@@ -18,6 +18,8 @@ var (
 	baseurl string
 )
 
+// Expect and env variable called BASEURL. If not defined, use the default "localhost:9000";
+// The Env variable is handy for multiple deployments and CI server
 func TestMain(m *testing.M) {
 	baseurl = os.Getenv("BASEURL")
 	if baseurl == "" {
@@ -35,6 +37,8 @@ func TestPing(t *testing.T) {
 	assert.Equal(t, "pong", body)
 }
 
+// In general a blackbox test should not have knowledge of the internal data structure,
+// Here I'm making an exception by using LoginData struct from the code and marshalling to json
 var loginTests = []struct {
 	testcasedescription string
 	logindata           *LoginData
@@ -91,7 +95,7 @@ func TestLoginWithMalformedBody(t *testing.T) {
 }
 
 func TestGetAllUsers(t *testing.T) {
-	// functionality not yet implemented
+	// functionality not implemented, so expecting error
 	res, err := http.Get("http://" + baseurl + "/users")
 	assert.Nil(t, err, "Error in HTTP connection")
 	status, body := extract(t, res)
@@ -100,7 +104,7 @@ func TestGetAllUsers(t *testing.T) {
 
 }
 
-func TestGetUser(t *testing.T) {
+func TestGetUnderageUser(t *testing.T) {
 	req, _ := http.NewRequest("GET", "http://"+baseurl+"/users/1", nil)
 	req.Header.Add("Authorization", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9")
 	res, err := http.DefaultClient.Do(req)
@@ -108,7 +112,7 @@ func TestGetUser(t *testing.T) {
 	status, body := extract(t, res)
 	assert.Equal(t, http.StatusOK, status)
 	assert.Equal(t, "{\"id\":1,\"email\":\"demo@empatica.com\",\"firstName\":\"John\",\"lastName\":\"\",\"age\":13}\n", body)
-
+	//lastname is correctly empty as user is underage
 }
 
 func TestGetUserWithoutToken(t *testing.T) {
@@ -129,6 +133,7 @@ func TestGetUnexistingUser(t *testing.T) {
 	assert.Equal(t, "\"invalid token\"\n", body)
 }
 
+// Utility
 func extract(t *testing.T, res *http.Response) (int, string) {
 	defer res.Body.Close()
 	body, ioerr := ioutil.ReadAll(res.Body)

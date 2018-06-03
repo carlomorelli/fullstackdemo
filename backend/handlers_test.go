@@ -18,6 +18,10 @@ const (
 	plaintext = "text/plain; charset=utf-8"
 )
 
+// Note: the code in this unit test should mock any call to getUser() and getUserAccount(),
+// however mocking is not possible with the current code as it is not implementing an interface.
+// As result these handler tests are almost integration tests.
+
 func TestPingHandler_ShouldReturnAnswer(t *testing.T) {
 	req, err := http.NewRequest("GET", "/ping", nil)
 	assert.Nil(t, err, "Http request failed")

@@ -2,7 +2,7 @@
 **/.idea/*
 .vscode/*
 *.pdf
-api*
+backend/api*
 **/vendor/*
 **/node_modules/*
 debug*

@@ -32,11 +32,6 @@ func TestGetUser_WithInvalidId_ShouldReturnNil(t *testing.T) {
 	assert.Nil(t, user)
 }
 
-func IsBase64(s string) bool {
-	_, err := base64.StdEncoding.DecodeString(s)
-	return err == nil
-}
-
 func TestGetUserAccount_WithValidId_ShouldReturnUserAccount(t *testing.T) {
 	var (
 		userID int64 = 1
@@ -59,7 +54,6 @@ func TestGetUserAccount_WithInvalidId_ShouldReturnNil(t *testing.T) {
 }
 
 func TestGetLogin_WithValidCredentials_ShouldReturnUserAccount(t *testing.T) {
-
 	var (
 		username = "demo@empatica.com"
 		password = "passw0rd"
@@ -72,7 +66,6 @@ func TestGetLogin_WithValidCredentials_ShouldReturnUserAccount(t *testing.T) {
 }
 
 func TestGetLogin_WithNotFoundUser_ShouldReturnError(t *testing.T) {
-
 	var (
 		username = "invaliduser"
 		password = "passw0rd"
@@ -86,7 +79,6 @@ func TestGetLogin_WithNotFoundUser_ShouldReturnError(t *testing.T) {
 }
 
 func TestGetLogin_WithNotMatchingPassword_ShouldReturnError(t *testing.T) {
-
 	var (
 		username = "demo@empatica.com"
 		password = "invalidpassword"
@@ -114,11 +106,15 @@ var sanitizeTests = []struct {
 }
 
 func TestSanitize(t *testing.T) {
-
 	for _, tt := range sanitizeTests {
 		var newuser = tt.user
 		newuser.Sanitize()
 		assert.Equal(t, newuser.LastName, tt.expectedsurname)
 	}
+}
 
+// Utility
+func IsBase64(s string) bool {
+	_, err := base64.StdEncoding.DecodeString(s)
+	return err == nil
 }
