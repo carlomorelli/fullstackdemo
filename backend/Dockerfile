@@ -11,7 +11,7 @@ RUN go get -u -v \
     github.com/stretchr/testify
 
 RUN go build -o api
-RUN go test
+RUN go test -v -tags unit
 
 EXPOSE 9000
 
