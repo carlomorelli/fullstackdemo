@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+
+  backend:
+      image: backend-image
+      container_name: backend
+      build:
+        context: backend/
+      ports:
+        - "9000:9000"
+
+  frontend:
+      image: frontend-image
+      container_name: frontend
+      build:
+        context: frontend/
+      ports:
+        - "4200:4200"
+      depends_on:
+        - backend

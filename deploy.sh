@@ -1,27 +1,26 @@
 #!/usr/bin/env bash
 
-# build backend container
-docker build -t backend-image ./backend
+# build containers
+docker-compose build
 
-# deploy backend
-docker stop backend || true
-docker rm backend || true
-docker run -d -p 9000:9000 --name backend backend-image
+# deploy solution
+docker-compose down
+docker-compose up -d
 
 # run blackbox tests
 cd backend
 BASEURL=localhost:9000 go test -v -tags blackbox
 cd ..
 
-# build frontend container
-docker build -t frontend-image ./frontend
+# do frontend tests and e2e test only when running locally
+if [ "$1" != "ci" ]; then 
+    
+    cd frontend
+    ./node_modules/.bin/ng test --watch=false
 
-# deploy frontend
-docker stop frontend || true
-docker rm frontend || true
-docker run -d -p 4200:4200 --name frontend frontend-image
+    ./node_modules/.bin/webdriver-manager update
+    ./node_modules/.bin/webdriver-manager start --detach
+    ./node_modules/.bin/protractor e2e/protractor.conf.js
+    cd ..
 
-# run jasmine tests
-cd frontend
-#TODO
-cd ..
+fi

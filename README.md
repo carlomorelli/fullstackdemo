@@ -1,50 +1,41 @@
 # Fullstack Web Demo
 
-This code represents a demo environment for a web application. It consists in a backend written in Go and a frontend built on top of Angular.
+## Requirements
+* 
+* Golang 1.9 or later
+* NodeJS 8.9 or later
+* Docker and docker-compose 18.x or later
+* Chrome version 59 or later
 
-## Backend
-
-Please note: Golang 1.9 or above required (https://golang.org/doc/install).
-
-### Build
-
+## Quick setup (Linux only)
+After successfully installing the requirements on the system, run
 ```
-cd ./backend
-go build -o api
+./deploy.sh
 ```
+This will trigger:
+* Unit tests and integration tests for backend
+* Unit tests for frontend
+* Build of docker images for backend and frontend
+* Instantiation of the full solution (frontend reachable at http://localhost:4200)
+* Run of Protractor E2E tests on the frontend (1)
 
-### Run
-
+(1): WARNING On some systems the WebDriver server may not detach correctly. The solution is to comment this line in the `deploy.sh` script:
 ```
-./api
+./node_modules/.bin/webdriver-manager update
+./node_modules/.bin/webdriver-manager start --detach
+./node_modules/.bin/protractor e2e/protractor.conf.js
 ```
+and launch Webdriver and Protractor manually on separate consoles.
 
-APIs will then be served on
-
+## CI setup
+For CI launch
 ```
-localhost:9000
+./deploy.sh ci
 ```
-
-## Frontend
-
-Please note: Node 8.9 or above required (https://nodejs.org/en/download/).
-
-(Want to run multiple node versions? Please take a look at https://github.com/tj/n)
-
-### Build
-
+This will run a subset of test avoiding the Protractor and Angular Jasmine ones that require a live browser (which is problematic on some CI servers).
+As alternative, simply manage the containers with
 ```
-cd ./frontend
-npm install
-```
-
-### Live development
-
-```
-./node_modules/.bin/ng serve --open
+docker-compose up -d  #create deployment
+docker-compose down   #shutdown deployment
 ```
 
-Frontend will then be served on 
-```
-localhost:4200
-```

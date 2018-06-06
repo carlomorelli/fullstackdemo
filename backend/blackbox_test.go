@@ -37,6 +37,17 @@ func TestPing(t *testing.T) {
 	assert.Equal(t, "pong", body)
 }
 
+func TestCorsNotAllowedMethod(t *testing.T) {
+	fmt.Printf("Test cors with not allowed method")
+	req, _ := http.NewRequest("PATCH", "http://"+baseurl+"/ping", nil)
+	res, err := http.DefaultClient.Do(req)
+	assert.Nil(t, err, "Error in HTTP connection")
+	status, body := extract(t, res)
+	assert.Equal(t, http.StatusMethodNotAllowed, status)
+	assert.Equal(t, "", body)
+
+}
+
 // In general a blackbox test should not have knowledge of the internal data structure,
 // Here I'm making an exception by using LoginData struct from the code and marshalling to json
 var loginTests = []struct {
@@ -57,17 +68,6 @@ var loginTests = []struct {
 		http.StatusForbidden,
 		"invalid password",
 	},
-}
-
-func TestCorsNotAllowedMethod(t *testing.T) {
-	fmt.Printf("Test cors with not allowed method")
-	req, _ := http.NewRequest("PATCH", "http://"+baseurl+"/ping", nil)
-	res, err := http.DefaultClient.Do(req)
-	assert.Nil(t, err, "Error in HTTP connection")
-	status, body := extract(t, res)
-	assert.Equal(t, http.StatusMethodNotAllowed, status)
-	assert.Equal(t, "", body)
-
 }
 
 func TestLogin(t *testing.T) {
