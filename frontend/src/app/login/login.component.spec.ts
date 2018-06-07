@@ -28,21 +28,4 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should check true when username and password are filled', () => {
-  //   component.email = "something"
-  //   component.password = "asdasd"
-  //   expect(component.check()).toBe(true);
-  // });
-
-  // it('should check false when username is not filled', () => {
-  //   component.email = ""
-  //   component.password = "asdasd"
-  //   expect(component.check()).toBe(false);
-  // });
-  
-  // it('should login when credentials are provided', () => {
-  //   component.email = "valid"
-  //   component.password = "valid"
-  //   when(component.api.login())
-  // });
 });

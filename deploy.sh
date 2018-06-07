@@ -12,15 +12,10 @@ cd backend
 BASEURL=localhost:9000 go test -v -tags blackbox
 cd ..
 
-# do frontend tests and e2e test only when running locally
+# run unit tests for frontend only when running locally (as they require a browser)
 if [ "$1" != "ci" ]; then 
     
     cd frontend
     ./node_modules/.bin/ng test --watch=false
-
-    ./node_modules/.bin/webdriver-manager update
-    ./node_modules/.bin/webdriver-manager start --detach
-    ./node_modules/.bin/protractor e2e/protractor.conf.js
-    cd ..
 
 fi

@@ -29,6 +29,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
+//TC102
 func TestPing(t *testing.T) {
 	res, err := http.Get("http://" + baseurl + "/ping")
 	assert.Nil(t, err, "Error in HTTP connection")
@@ -37,6 +38,7 @@ func TestPing(t *testing.T) {
 	assert.Equal(t, "pong", body)
 }
 
+//TC101
 func TestCorsNotAllowedMethod(t *testing.T) {
 	fmt.Printf("Test cors with not allowed method")
 	req, _ := http.NewRequest("PATCH", "http://"+baseurl+"/ping", nil)
@@ -45,7 +47,6 @@ func TestCorsNotAllowedMethod(t *testing.T) {
 	status, body := extract(t, res)
 	assert.Equal(t, http.StatusMethodNotAllowed, status)
 	assert.Equal(t, "", body)
-
 }
 
 // In general a blackbox test should not have knowledge of the internal data structure,
@@ -57,12 +58,14 @@ var loginTests = []struct {
 	expectedbody        string
 }{
 	{
+		//TC103-1
 		"Happy path, test a working login credentials, expect token in answer\n",
 		&LoginData{Email: "demo@empatica.com", Password: "passw0rd"},
 		http.StatusOK,
 		"{\"token\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9\"}\n",
 	},
 	{
+		//TC103-2
 		"Not valid login credentials, expect error\n",
 		&LoginData{Email: "demo@empatica.com", Password: "wrongpassword"},
 		http.StatusForbidden,
@@ -83,6 +86,7 @@ func TestLogin(t *testing.T) {
 	}
 }
 
+//TC103-3
 func TestLoginWithMalformedBody(t *testing.T) {
 	fmt.Printf("Malformed login credentials, expect error\n")
 	buf := bytes.NewBuffer([]byte("not a valid json"))
@@ -91,9 +95,9 @@ func TestLoginWithMalformedBody(t *testing.T) {
 	status, body := extract(t, res)
 	assert.Equal(t, http.StatusBadRequest, status)
 	assert.Equal(t, "invalid login data", body)
-
 }
 
+//TC104-1
 func TestGetAllUsers(t *testing.T) {
 	// functionality not implemented, so expecting error
 	res, err := http.Get("http://" + baseurl + "/users")
@@ -101,9 +105,9 @@ func TestGetAllUsers(t *testing.T) {
 	status, body := extract(t, res)
 	assert.Equal(t, http.StatusNotFound, status)
 	assert.Equal(t, "404 page not found\n", body)
-
 }
 
+//TC105-1-1
 func TestGetUnderageUser(t *testing.T) {
 	req, _ := http.NewRequest("GET", "http://"+baseurl+"/users/1", nil)
 	req.Header.Add("Authorization", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9")
@@ -115,6 +119,7 @@ func TestGetUnderageUser(t *testing.T) {
 	//lastname is correctly empty as user is underage
 }
 
+//TC105-2
 func TestGetUserWithoutToken(t *testing.T) {
 	res, err := http.Get("http://" + baseurl + "/users/1")
 	assert.Nil(t, err, "Error in HTTP connection")
@@ -123,6 +128,7 @@ func TestGetUserWithoutToken(t *testing.T) {
 	assert.Equal(t, "\"missing token\"\n", body)
 }
 
+//TC105-3
 func TestGetUnexistingUser(t *testing.T) {
 	req, _ := http.NewRequest("GET", "http://"+baseurl+"/users/718", nil)
 	req.Header.Add("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9")
